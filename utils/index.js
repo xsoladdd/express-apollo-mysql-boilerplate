@@ -4,3 +4,4 @@
  * so the other devs will know what are being passed
  */
 export * from "./date_time_helpers";
+export * from "./KnexProfiler";

@@ -1,5 +1,6 @@
 require("dotenv").config();
 import Knex from "knex";
+import { knexProfiler } from "../../utils";
 
 const knex = Knex({
   client: "mysql2",
@@ -11,5 +12,10 @@ const knex = Knex({
     port: process.env.DB_PORT,
   },
 });
+
+// Setup Profiler that log every query
+if (process.env.NODE_ENV === "development") {
+  knexProfiler(knex);
+}
 
 export default knex;
