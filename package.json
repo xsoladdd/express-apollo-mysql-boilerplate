@@ -1,0 +1,31 @@
+{
+  "name": "express-apollo-mysql",
+  "version": "1.0.0",
+  "description": "This is my boilerplate for Both web and mobile ready application",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon -r esm bin/www.js TZ=Asia/Manila",
+    "migrate:seed": "npx knex migrate:rollback --all && npx knex migrate:latest && npx knex seed:run",
+    "migrate:refresh": "npx knex migrate:rollback --all && npx knex migrate:latest",
+    "migrate": "npx knex migrate:latest",
+    "rollback": "npx knex migrate:rollback"
+  },
+  "author": "Ericson Orias Funtanar",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-modules/core": "^0.7.17",
+    "apollo-server-express": "^2.19.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "knex": "^0.21.12",
+    "moment": "^2.29.1",
+    "mysql2": "^2.2.5",
+    "nanoid": "^3.1.20",
+    "objection": "^2.2.3"
+  },
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "nodemon": "^2.0.6"
+  }
+}
