@@ -14,7 +14,7 @@ A very neat setup that utilize the power of both **MySQL** and **GraphQL**.
 
 ## Commands to start
  ```
-git clone 
+git clone https://github.com/xsoladdd/express-apollo-mysql-boilerplate.git
 cd folder
 npm install
 npx knex init
