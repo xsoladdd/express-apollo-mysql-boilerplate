@@ -5,3 +5,5 @@
  */
 export * from "./date_time_helpers";
 export * from "./KnexProfiler";
+export * from "./decrypt";
+export * from "./encrypt";

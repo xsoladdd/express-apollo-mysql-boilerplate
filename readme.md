@@ -33,6 +33,8 @@ DB_USER=root
 DB_PASSWORD=
 DB_DATABASE=db_name
 DB_PORT=3306 
+
+ENCRYPTION_KEY=
 ```
 
 After this, Fire up the application and see if everything works as it should
