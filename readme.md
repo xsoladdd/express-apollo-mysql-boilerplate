@@ -34,7 +34,9 @@ DB_PASSWORD=
 DB_DATABASE=db_name
 DB_PORT=3306 
 
-ENCRYPTION_KEY=
+JWT_SECRET=jwt_secret
+JWT_EXPIRES=86400000 
+ENCRYPTION_KEY=secret_key
 ```
 
 After this, Fire up the application and see if everything works as it should

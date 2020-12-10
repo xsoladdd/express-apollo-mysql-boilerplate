@@ -15,7 +15,14 @@ app.get("/", (req, res) => {
   if (process.env.NODE_ENV == "production") {
     return res.send(`Welcome `);
   }
-  res.send(`Welcome. To access Playground, please assure to go to /graphql`);
+  res.json({
+    message: "Welcome. To access Playground, please assure to go to /graphql",
+    note:
+      "Please assure to put the token on authorization header for protected routes",
+    format: {
+      authorization: "TOken",
+    },
+  });
 });
 app.get("/Test", async (req, res) => {
   const { Users } = Models;

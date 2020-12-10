@@ -40,6 +40,7 @@ const typeDefs = gql`
   type Query {
     getUser(input: InputUserFilter): User
     getUsers: [User]
+    getUsersProtected: [User]
   }
 
   type Mutation {
@@ -69,6 +70,10 @@ const resolvers = {
       return data;
     },
     getUsers: async () => {
+      const data = await Users.query();
+      return data;
+    },
+    getUsersProtected: async () => {
       const data = await Users.query();
       return data;
     },
