@@ -51,6 +51,7 @@ const typeDefs = gql`
   type Query {
     getUser(input: inputFilterUserQuery, token: String): returnUser
     getUsers: returnUsers
+    getUsersProtected: returnUsers
     login(input: inputLogin): returnUser
   }
 `;

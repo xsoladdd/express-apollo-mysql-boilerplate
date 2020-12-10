@@ -34,7 +34,7 @@ const permissions = shield(
   {
     Query: {
       login: allow,
-      // getUsersProtected: isAuthenticated,
+      getUsers: allow,
       "*": isAuthenticated,
     },
     Mutation: {
