@@ -1,98 +1,127 @@
 import { gql } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
 import Models from "../../Model";
+import Common from "./Common";
+import { checkPassword, hashPassword, generateToken } from "../../utils";
 // import {InsertGraphMethod} from 'objection'
 
 const { Users, Todo } = Models;
 
 // Schema
 const typeDefs = gql`
-  type Todo {
-    name: String
-    is_finish: Boolean
-    user: User
-  }
-
   type User {
-    id: ID
+    id: EncryptedString
     first_name: String
     last_name: String
-    getFullName: String
-    todo: [Todo]
+    email: String
+    date_created: DateTime
+    date_updated: DateTime
+  }
+  type returnUser {
+    status: Int
+    user: User
+    message: String
+    token: String
+  }
+  type returnUsers {
+    status: Int
+    user: [User]
+    message: String
   }
 
-  input InputUserFilter {
-    id: Int!
-    first_name: String
-    last_name: String
+  input inputFilterUserQuery {
+    id: EncryptedString
   }
 
-  input InputNewUser {
+  input inputRegister {
     first_name: String!
     last_name: String!
+    email: String!
+    password: String!
   }
 
-  input InputNewTodo {
-    name: String!
-    user_id: Int!
-  }
-
-  type Query {
-    getUser(input: InputUserFilter): User
-    getUsers: [User]
-    getUsersProtected: [User]
+  input inputLogin {
+    email: String!
+    password: String!
   }
 
   type Mutation {
-    newUser(input: InputNewUser): User
-    newTodo(input: InputNewTodo): User
+    register(input: inputRegister): returnUser
+  }
+  type Query {
+    getUser(input: inputFilterUserQuery, token: String): returnUser
+    getUsers: returnUsers
+    login(input: inputLogin): returnUser
   }
 `;
 
 const resolvers = {
-  User: {
-    first_name: async (parent) => {
-      return `${parent.first_name} Concat `;
-    },
-    getFullName: async (parent) => {
-      return `${parent.first_name} ${parent.last_name}`;
-    },
-    todo: async (parent) => {
-      const { id } = parent;
-      const data = await Todo.query().where("user_id", id);
-      return data;
-    },
-  },
   Query: {
     getUser: async (_, { input }) => {
       const { id } = input;
-      const data = await Users.query().findOne("id", id);
-      return data;
+      const data = await Users.query().findById(id);
+      // Check if no data in database
+      if (!data) {
+        return {
+          status: 0,
+          message: "No data found",
+        };
+      }
+      return {
+        status: 1,
+        user: data,
+      };
     },
     getUsers: async () => {
       const data = await Users.query();
-      return data;
+      // Check if no data in database
+      if (data.length <= 0) {
+        return {
+          status: 0,
+          user: [],
+          message: "No data found",
+        };
+      }
+
+      return {
+        status: 1,
+        user: data,
+      };
     },
-    getUsersProtected: async () => {
-      const data = await Users.query();
-      return data;
+    login: async (_, { input }) => {
+      const { email, password } = input;
+      const user = await Users.query().findOne("email", email);
+
+      if (await checkPassword(password, user.password)) {
+        const token = await generateToken(user);
+        return {
+          status: 1,
+          user: user,
+          message: "Login Success",
+          token: token,
+        };
+      }
+      return {
+        status: 0,
+        message: "Incorrect Username/Password",
+      };
     },
   },
   Mutation: {
-    newUser: async (_, { input }) => {
-      const data = await Users.query().insertGraph(input);
-      return data;
-    },
-    newTodo: async (_, { input }) => {
-      const { user_id, name: todoName } = input;
-
-      const data = await Todo.query().insertGraph({
-        name: todoName,
-        user_id,
+    register: async (_, { input }) => {
+      const { first_name, last_name, email, password } = input;
+      const hashedPassword = await hashPassword(password);
+      const data = await Users.query().insertGraph({
+        first_name,
+        last_name,
+        email,
+        password: hashedPassword,
       });
-      const userData = await Users.query().findOne("id", user_id);
-      console.log(userData);
-      return userData;
+      return {
+        status: 1,
+        user: data,
+        message: "Succesfully Fetch",
+      };
     },
   },
 };
@@ -101,4 +130,5 @@ export default new GraphQLModule({
   // imports: [require("./Todo")],
   typeDefs,
   resolvers,
+  imports: [Common],
 });

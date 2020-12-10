@@ -1,7 +1,7 @@
 import { gql } from "apollo-server-express";
 import { GraphQLModule } from "@graphql-modules/core";
 import { GraphQLScalarType } from "graphql";
-import { encrypt, decrypt } from "../utils";
+import { encrypt, decrypt } from "../../utils";
 
 export const typeDefs = gql`
   scalar EncryptedString

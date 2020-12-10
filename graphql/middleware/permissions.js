@@ -33,12 +33,12 @@ const isAuthenticated = rule()(async (parent, args, ctx) => {
 const permissions = shield(
   {
     Query: {
-      // login: allow,
-      getUsersProtected: isAuthenticated,
-      getUsers: allow,
-      // "*": isAuthenticated,
+      login: allow,
+      // getUsersProtected: isAuthenticated,
+      "*": isAuthenticated,
     },
     Mutation: {
+      register: allow,
       "*": isAuthenticated,
     },
   },
